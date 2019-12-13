@@ -22,7 +22,7 @@ module.exports = (app) => {
     
     app.get("/booklist/:id", async (req, res) => {
         try {
-            var result = await BookList.find().exec();
+            var result = await BookList.findById(req.params.id).exec();
             res.send(result);
         } catch(err) {
             res.status(500).send(err);

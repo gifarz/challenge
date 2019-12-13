@@ -5,7 +5,8 @@ Mongoose.connect("mongodb://localhost/booklist");
 const BookList = Mongoose.model("book", {
     title: {
         type: String,
-        required: [true, "title must be filled"]
+        required: [true, "title must be filled"],
+        unique: true
     },
     author: {
         type: [String],
