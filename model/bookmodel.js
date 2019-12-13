@@ -3,8 +3,14 @@ const Mongoose = require("mongoose");
 Mongoose.connect("mongodb://localhost/booklist");
 
 const BookList = Mongoose.model("book", {
-    title: String,
-    author: [String],
+    title: {
+        type: String,
+        required: [true, "title must be filled"]
+    },
+    author: {
+        type: [String],
+        required: [true, "author must be filled"]
+    },
     published_date: Date,
     pages: Number,
     language: String,
