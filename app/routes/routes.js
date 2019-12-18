@@ -2,7 +2,7 @@ const BookList = require('../../model/bookmodel')
 
 module.exports = (app) => {
     app.post("/booklist", async (req, res) => {
-        try {;
+        try {
             var book = new BookList(req.body);
             var result = await book.save();
             res.send(result);
@@ -29,19 +29,33 @@ module.exports = (app) => {
         }
     })
     
-    app.put("/booklist/:id", async (req, res) => {
+    app.put("/booklist/:id", async (request, response) => {
         try {
-            var result = await BookList.findById(req.params.id).exec();
-            res.send(result);
-        } catch(err) {
-            res.status(500).send(err);
+          var book = await BookList.findById(request.params.id).exec();
+          book.set(request.body);
+          var result = await book.save();
+          response.send(result);
+        } catch (error) {
+          response.status(500).send(error);
         }
-    })
+      });
     
     app.delete("/booklist/:id", async (req, res) => {
         try {
-            var result = await BookList.deleteOne({_id:req.params.id}).exec();
-            res.send(result);
+            await BookList.findByIdAndDelete(req.params.id)
+            .then(books => {
+                if(books) {
+                    res.json({
+                        error: false,
+                        data: "Book has been deleted"
+                    })
+                } else {
+                    res.json({
+                        error: true,
+                        data: "Book not found"
+                    })
+                }
+            })
         } catch(err) {
             res.status(500).send(err);
         }
